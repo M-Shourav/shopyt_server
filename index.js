@@ -2,10 +2,14 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/authRoutes.js";
+import connectDB from "./config/mongoDB.js";
 const app = express();
 // .env setup
 dotenv.config();
 const port = process.env.PORT || 8000;
+
+// MongoDB Connect
+connectDB();
 
 const whiteList = [process.env.ADMIN_URL, process.env.CLIENT_URL];
 
