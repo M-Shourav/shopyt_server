@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import validator from "validator";
 import userModel from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+import cloudinary from "../config/cloudinary.js";
 
 const loginUser = asyncHandler(async (req, res) => {
   try {
@@ -99,11 +100,17 @@ const registerUser = asyncHandler(async (req, res) => {
       });
     }
 
+    const avatar = {
+      url: req.file?.path,
+      public_id: req.file?.filename,
+    };
+
     // create new user
     const user = await userModel.create({
       name,
       email,
       password,
+      avatar,
       role,
     });
 
@@ -153,13 +160,33 @@ const userLogout = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   try {
-    const { name, email, avatar } = req.body;
+    const { name, email } = req.body;
     const user = await userModel.findById(req.params.id);
     if (!user) {
       return res.json({
         success: false,
         message: "User not found",
       });
+    }
+    if (
+      req.user._id.toString() !== user._id.toString() &&
+      req.user.role !== "admin"
+    ) {
+      return res.json({
+        success: false,
+        message: "Not authorized to update this user",
+      });
+    }
+
+    if (req.file) {
+      if (user.avatar && user.avatar.public_id) {
+        await cloudinary.uploader.destroy(user.avatar.public_id);
+      }
+      // save new user
+      user.avatar = {
+        url: req.file?.path,
+        public_id: req.file?.filename,
+      };
     }
 
     if (name) user.name = name;
@@ -172,7 +199,6 @@ const updateUser = asyncHandler(async (req, res) => {
       }
       user.email = email;
     }
-    if (avatar) user.avatar = avatar;
 
     // update user data
     const update = await user.save();
@@ -205,6 +231,11 @@ const deleteUser = asyncHandler(async (req, res) => {
         message: "user not found",
       });
     }
+    // delete image from cloudinary
+    if (user?.avatar.public_id) {
+      await cloudinary.uploader.destroy(user.avatar?.public_id);
+    }
+    // delete user from database
     await userModel.findByIdAndDelete(req.params.id);
     return res.json({
       success: true,

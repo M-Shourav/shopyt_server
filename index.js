@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/authRoutes.js";
 import connectDB from "./config/mongoDB.js";
+import cookieParser from "cookie-parser";
 const app = express();
 // .env setup
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", router);
 
