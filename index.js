@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use("/api/auth", router);
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello hotel booking server");
 });
 
 app.listen(port, () => {

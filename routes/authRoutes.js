@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   deleteUser,
   getAllUser,
+  getMe,
   loginUser,
   registerUser,
   updateUser,
@@ -17,6 +18,7 @@ router.post("/register", upload.single("avatar"), registerUser);
 router.post("/logout", protect, userLogout);
 router.post("/remove/:id", protect, adminOnly, deleteUser);
 router.get("/profile", protect, adminOnly, getAllUser);
+router.get("/me", protect, getMe);
 router.put("/update/:id", upload.single("avatar"), protect, updateUser);
 
 export default router;

@@ -144,7 +144,11 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const userLogout = asyncHandler(async (req, res) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
     res.json({
       success: true,
       message: "User logout successfully",
@@ -160,7 +164,7 @@ const userLogout = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, role } = req.body;
     const user = await userModel.findById(req.params.id);
     if (!user) {
       return res.json({
@@ -199,6 +203,7 @@ const updateUser = asyncHandler(async (req, res) => {
       }
       user.email = email;
     }
+    if (role) user.role = role;
 
     // update user data
     const update = await user.save();
@@ -211,6 +216,7 @@ const updateUser = asyncHandler(async (req, res) => {
         name: update?.name,
         email: update?.email,
         avatar: update?.avatar,
+        role: update?.role,
       },
     });
   } catch (error) {
@@ -268,6 +274,35 @@ const getAllUser = asyncHandler(async (req, res) => {
   }
 });
 
+const getMe = asyncHandler(async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not logged in",
+      });
+    }
+
+    return res.json({
+      success: true,
+      user: {
+        _id: user?._id,
+        name: user?.name,
+        email: user?.email,
+        avatar: user?.avatar,
+        role: user?.role,
+      },
+    });
+  } catch (error) {
+    console.log("Get me user error", error);
+    return res.json({
+      success: false,
+      message: error?.message,
+    });
+  }
+});
+
 export {
   loginUser,
   registerUser,
@@ -275,4 +310,5 @@ export {
   updateUser,
   deleteUser,
   getAllUser,
+  getMe,
 };
