@@ -11,12 +11,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const storage = new CloudinaryStorage({
+export const Storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: "avatars",
-    allowed_formats: ["jpg", "png", "jpeg"],
-    transformation: [{ width: 300, height: 300, crop: "limit" }],
+  params: async (req, res) => {
+    return {
+      folder: req.body.folder || "avatars",
+      allowed_formats: ["jpg", "png", "jpeg"],
+      transformation: [{ width: 300, height: 300, crop: "limit" }],
+    };
   },
 });
 

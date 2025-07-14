@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/authRoutes.js";
+import hotelRouter from "./routes/hotelRoutes.js";
 import connectDB from "./config/mongoDB.js";
 import cookieParser from "cookie-parser";
 const app = express();
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", router);
+app.use("/api/book", hotelRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello hotel booking server");
