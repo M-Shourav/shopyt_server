@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes/authRoutes.js";
 import hotelRouter from "./routes/hotelRoutes.js";
-import connectDB from "./config/mongoDB.js";
 import cookieParser from "cookie-parser";
+import connectDB from "./config/connectDB.js";
 const app = express();
 // .env setup
 dotenv.config();

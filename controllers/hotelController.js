@@ -18,6 +18,21 @@ const createHotel = asyncHandler(async (req, res) => {
       public_id: file.filename,
     }));
 
+    if (!uploadImage) {
+      return res.json({
+        success: false,
+        message: "Image must added",
+      });
+    }
+
+    const existingHotel = await hotelModel.findOne({ title });
+    if (existingHotel) {
+      return res.json({
+        success: false,
+        message: "A hotel with this title already exists.",
+      });
+    }
+
     const hotel = await hotelModel.create({
       title,
       description,
