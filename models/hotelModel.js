@@ -9,6 +9,17 @@ const hotelSchema = new mongoose.Schema(
     city: { type: String, required: true },
     country: { type: String, required: true },
     pricePerNight: { type: Number, required: true },
+    airConditioning: { type: String },
+    wifi: { type: String },
+    swimmingPool: { type: String },
+    restaurant: { type: String },
+    teaCoffeeMaker: { type: String },
+    bathroomAmenities: { type: String },
+    safe: { type: String },
+    telephone: { type: String },
+    maxOccupancy: { type: Number },
+    bedType: { type: String },
+    size: { type: String },
     images: [
       {
         url: { type: String },

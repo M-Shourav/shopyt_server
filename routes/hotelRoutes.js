@@ -27,6 +27,6 @@ hotelRouter.put(
   updateHotel
 );
 hotelRouter.get("/getHotels", getHotel);
-hotelRouter.get("/getHotelsById/:slug", singleHotel);
+hotelRouter.get("/getHotelsBySlug/:slug", singleHotel);
 
 export default hotelRouter;
