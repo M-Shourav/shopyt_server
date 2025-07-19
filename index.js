@@ -5,6 +5,7 @@ import router from "./routes/authRoutes.js";
 import hotelRouter from "./routes/hotelRoutes.js";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/connectDB.js";
+import diningRouter from "./routes/diningRoutes.js";
 const app = express();
 // .env setup
 dotenv.config();
@@ -29,6 +30,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", router);
 app.use("/api/book", hotelRouter);
+app.use("/api/dining", diningRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello hotel booking server");

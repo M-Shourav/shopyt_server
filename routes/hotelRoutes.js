@@ -13,8 +13,8 @@ const hotelRouter = Router();
 
 hotelRouter.post(
   "/hotel",
-  // protect,
-  // adminOnly,
+  protect,
+  adminOnly,
   upload.array("avatar", 3),
   createHotel
 );
